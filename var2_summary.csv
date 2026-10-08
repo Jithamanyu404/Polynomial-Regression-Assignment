@@ -1,0 +1,2 @@
+problem,model,regularisation,degree,alpha,cv_mse,cv_r2
+VAR2,lasso,L1,11,0.001,0.26361263213369884,0.9943070251922442
