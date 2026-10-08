@@ -1,40 +1,19 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
-# ============================================================
-# FUNCTION TO PLOT MSE VS DEGREE
-# ============================================================
-
 def plot_mse_vs_degree(csv_path, output_path, problem_name):
-    
-    # --------------------------------------------------------
-    # Load CSV
-    # --------------------------------------------------------
     df = pd.read_csv(csv_path)
-
-    # --------------------------------------------------------
-    # For each model and degree, select the alpha
-    # that gives the lowest 5-fold CV MSE
-    # --------------------------------------------------------
     best_by_degree = (
         df.loc[
             df.groupby(["model", "degree"])["cv_mse"].idxmin()
         ]
         .sort_values(["model", "degree"])
     )
-
-    # --------------------------------------------------------
-    # Create plot
-    # --------------------------------------------------------
     plt.figure(figsize=(8, 6))
-
     for model in ["ridge", "lasso"]:
-
         model_data = best_by_degree[
             best_by_degree["model"] == model
         ]
-
         plt.plot(
             model_data["degree"],
             model_data["cv_mse"],
@@ -43,13 +22,9 @@ def plot_mse_vs_degree(csv_path, output_path, problem_name):
             label=model.upper()
         )
 
-    # --------------------------------------------------------
-    # Find overall best model
-    # --------------------------------------------------------
     best_idx = df["cv_mse"].idxmin()
     best = df.loc[best_idx]
 
-    # Mark the selected model
     plt.scatter(
         best["degree"],
         best["cv_mse"],
@@ -67,10 +42,6 @@ def plot_mse_vs_degree(csv_path, output_path, problem_name):
         textcoords="offset points",
         fontsize=9
     )
-
-    # --------------------------------------------------------
-    # Labels
-    # --------------------------------------------------------
     plt.xlabel("Polynomial Degree")
     plt.ylabel("5-Fold CV MSE")
 
@@ -90,35 +61,19 @@ def plot_mse_vs_degree(csv_path, output_path, problem_name):
     plt.legend()
 
     plt.tight_layout()
-
-    # --------------------------------------------------------
-    # Save
-    # --------------------------------------------------------
     plt.savefig(
         output_path,
         dpi=300,
         bbox_inches="tight"
     )
-
     plt.close()
-
     print(f"Saved: {output_path}")
-
-
-# ============================================================
-# VAR1
-# ============================================================
 
 plot_mse_vs_degree(
     "report/var1_kfold_sweep.csv",
     "report/var1_mse_vs_degree.png",
     "VAR1"
 )
-
-
-# ============================================================
-# VAR2
-# ============================================================
 
 plot_mse_vs_degree(
     "report/var2_kfold_sweep.csv",
